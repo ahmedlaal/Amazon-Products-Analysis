@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Amazon Products Analysis"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "75f365bf-e076-4a20-b72f-32b9d74e76fc"
+  }
+}

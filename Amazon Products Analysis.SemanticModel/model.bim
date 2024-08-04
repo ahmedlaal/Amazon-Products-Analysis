@@ -1,0 +1,677 @@
+{
+  "compatibilityLevel": 1567,
+  "model": {
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"amazon\",\"Errors in amazon\"]"
+      },
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "1"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.130.930.0 (24.06)"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\"]"
+      }
+    ],
+    "culture": "en-US",
+    "cultures": [
+      {
+        "name": "en-US",
+        "linguisticMetadata": {
+          "content": {
+            "Entities": {
+              "amazon.actual_price": {
+                "Definition": {
+                  "Binding": {
+                    "ConceptualEntity": "amazon",
+                    "ConceptualProperty": "actual_price"
+                  }
+                },
+                "State": "Generated",
+                "Terms": [
+                  {
+                    "Actual Price": {
+                      "Source": {
+                        "Agent": "PowerBI.VisualColumnRename",
+                        "Type": "External"
+                      },
+                      "State": "Suggested",
+                      "Weight": 0.9
+                    }
+                  }
+                ]
+              },
+              "amazon.discount_percentage": {
+                "Definition": {
+                  "Binding": {
+                    "ConceptualEntity": "amazon",
+                    "ConceptualProperty": "discount_percentage"
+                  }
+                },
+                "State": "Generated",
+                "Terms": [
+                  {
+                    "Discount Percentage": {
+                      "Source": {
+                        "Agent": "PowerBI.VisualColumnRename",
+                        "Type": "External"
+                      },
+                      "State": "Suggested",
+                      "Weight": 0.9
+                    }
+                  }
+                ]
+              },
+              "amazon.discounted_price": {
+                "Definition": {
+                  "Binding": {
+                    "ConceptualEntity": "amazon",
+                    "ConceptualProperty": "discounted_price"
+                  }
+                },
+                "State": "Generated",
+                "Terms": [
+                  {
+                    "Discounted Price": {
+                      "Source": {
+                        "Agent": "PowerBI.VisualColumnRename",
+                        "Type": "External"
+                      },
+                      "State": "Suggested",
+                      "Weight": 0.9
+                    }
+                  }
+                ]
+              },
+              "amazon.product_link": {
+                "Definition": {
+                  "Binding": {
+                    "ConceptualEntity": "amazon",
+                    "ConceptualProperty": "product_link"
+                  }
+                },
+                "State": "Generated",
+                "Terms": [
+                  {
+                    "Product Link": {
+                      "Source": {
+                        "Agent": "PowerBI.VisualColumnRename",
+                        "Type": "External"
+                      },
+                      "State": "Suggested",
+                      "Weight": 0.9
+                    }
+                  }
+                ]
+              },
+              "amazon.product_name": {
+                "Definition": {
+                  "Binding": {
+                    "ConceptualEntity": "amazon",
+                    "ConceptualProperty": "product_name"
+                  }
+                },
+                "State": "Generated",
+                "Terms": [
+                  {
+                    "Product Name": {
+                      "Source": {
+                        "Agent": "PowerBI.VisualColumnRename",
+                        "Type": "External"
+                      },
+                      "State": "Suggested",
+                      "Weight": 0.9
+                    }
+                  }
+                ]
+              }
+            },
+            "Language": "en-US",
+            "Version": "2.0.0"
+          },
+          "contentType": "json"
+        }
+      }
+    ],
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "expressions": [
+      {
+        "name": "Errors in amazon",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "Source = amazon,",
+          "  #\"Detected Type Mismatches\" = let",
+          "    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Source, Table.ColumnsOfType(Source, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),",
+          "    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),",
+          "    fieldNames = Record.FieldNames(recordTypeFields),",
+          "    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),",
+          "    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = \"The type of the value does not match the type of the column.\", Detail = v], fieldTypes{i}})",
+          "in",
+          "    Table.TransformColumns(Source, pairs),",
+          "  #\"Added Index\" = Table.AddIndexColumn(#\"Detected Type Mismatches\", \"Row Number\" ,1),",
+          "  #\"Kept Errors\" = Table.SelectRowsWithErrors(#\"Added Index\", {\"product_id\", \"product_name\", \"category\", \"discounted_price\", \"actual_price\", \"discount_percentage\", \"rating\", \"rating_count\", \"about_product\", \"user_id\", \"user_name\", \"review_id\", \"review_title\", \"review_content\", \"img_link\", \"product_link\"}),",
+          "  #\"Reordered Columns\" = Table.ReorderColumns(#\"Kept Errors\", {\"Row Number\", \"product_id\", \"product_name\", \"category\", \"discounted_price\", \"actual_price\", \"discount_percentage\", \"rating\", \"rating_count\", \"about_product\", \"user_id\", \"user_name\", \"review_id\", \"review_title\", \"review_content\", \"img_link\", \"product_link\"})",
+          "in",
+          "  #\"Reordered Columns\""
+        ],
+        "kind": "m",
+        "lineageTag": "6f94a85f-a549-4771-8fca-f0d76a4aba48",
+        "queryGroup": "Query Errors - 03/08/2024 12:12:58"
+      }
+    ],
+    "queryGroups": [
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "description": "Errors in queries that were loaded on 03/08/2024 12:12:58.",
+        "folder": "Query Errors - 03/08/2024 12:12:58"
+      }
+    ],
+    "sourceQueryCulture": "en-GB",
+    "tables": [
+      {
+        "name": "amazon",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "product_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2ba46acd-f2d9-4939-8fe2-c07a676fa775",
+            "sourceColumn": "product_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "product_name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c7f012b7-6066-4e28-8194-efda486fb217",
+            "sourceColumn": "product_name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "category",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "8fd722c9-5ead-4898-b622-80b50126daf1",
+            "sourceColumn": "category",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "discounted_price",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "143cfc04-a50c-42b7-9478-56919a8a3c74",
+            "sourceColumn": "discounted_price",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "actual_price",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "a401e139-2838-439d-8086-4d63f12f2144",
+            "sourceColumn": "actual_price",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "discount_percentage",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "e025b93e-b2d9-4c22-96ad-3d4670ea8fb9",
+            "sourceColumn": "discount_percentage",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "rating",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "DataType"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f31e8641-e415-4c9b-b9ba-8a18691af6ed",
+            "sourceColumn": "rating",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "rating_count",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "1bf53297-7ed8-4eb8-bb3a-be0d957def80",
+            "sourceColumn": "rating_count",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "about_product",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "088aa6ba-2ebb-4e25-b314-999354cb8859",
+            "sourceColumn": "about_product",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "user_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "7e0a34f5-0dd6-4e09-a8f6-14c424e7692d",
+            "sourceColumn": "user_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "user_name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "360147b0-ca68-481c-a271-c0e9fed95a30",
+            "sourceColumn": "user_name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "review_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "66cd1769-6832-4e72-912e-897acefd1ceb",
+            "sourceColumn": "review_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "review_title",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0626f13a-e373-421a-8355-f51c65e5dbea",
+            "sourceColumn": "review_title",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "review_content",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "e7d052dd-d3d9-4002-8661-972209264820",
+            "sourceColumn": "review_content",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "img_link",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f46749a9-4cdc-455d-970a-6ed1ff40c4f5",
+            "sourceColumn": "img_link",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "product_link",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "baf3c942-7379-4a25-a518-46d25c7f2dc9",
+            "sourceColumn": "product_link",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "0ff4fee0-eca2-4acd-a239-a9d970b8bc26",
+        "measures": [
+          {
+            "name": "AverageRating",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "expression": "AVERAGEX('amazon', VALUE('amazon'[rating]))",
+            "lineageTag": "477e6a7f-207d-45e8-93bd-8d758a687285"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "amazon",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:\\Users\\dell\\Downloads\\archive (2)\\amazon.csv\"),[Delimiter=\",\", Columns=16, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"product_id\", type text}, {\"product_name\", type text}, {\"category\", type text}, {\"discounted_price\", type text}, {\"actual_price\", type text}, {\"discount_percentage\", Percentage.Type}, {\"rating\", type number}, {\"rating_count\", Int64.Type}, {\"about_product\", type text}, {\"user_id\", type text}, {\"user_name\", type text}, {\"review_id\", type text}, {\"review_title\", type text}, {\"review_content\", type text}, {\"img_link\", type text}, {\"product_link\", type text}}),",
+                "    #\"Replaced Value\" = Table.ReplaceValue(#\"Changed Type\",\"₹\",\"\",Replacer.ReplaceText,{\"actual_price\"}),",
+                "    #\"Replaced Value1\" = Table.ReplaceValue(#\"Replaced Value\",\"₹\",\"\",Replacer.ReplaceText,{\"discounted_price\"}),",
+                "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Replaced Value1\",{{\"discounted_price\", Int64.Type}, {\"actual_price\", Int64.Type}})",
+                "in",
+                "    #\"Changed Type1\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "DateTableTemplate_1765f73b-6fb9-4920-afdb-fbc72ca5558e",
+        "annotations": [
+          {
+            "name": "__PBI_TemplateDateTable",
+            "value": "true"
+          },
+          {
+            "name": "DefaultItem",
+            "value": "DateHierarchy"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataCategory": "PaddedDateTableDates",
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "b312c093-46b7-48e2-b493-5f510a04bb07",
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Year"
+              }
+            ],
+            "dataCategory": "Years",
+            "dataType": "int64",
+            "expression": "YEAR([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "8e97d9fa-77d0-4174-8205-468ed7d9efb8",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "MonthNo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "MonthNumber"
+              }
+            ],
+            "dataCategory": "MonthOfYear",
+            "dataType": "int64",
+            "expression": "MONTH([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "ccfc5ad7-21cf-4f71-b9ef-c196de54bd0b",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Month"
+              }
+            ],
+            "dataCategory": "Months",
+            "dataType": "string",
+            "expression": "FORMAT([Date], \"MMMM\")",
+            "isHidden": true,
+            "lineageTag": "b2bba3b3-aa0b-4025-94b1-84e538a6b454",
+            "sortByColumn": "MonthNo",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "QuarterNo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "QuarterNumber"
+              }
+            ],
+            "dataCategory": "QuarterOfYear",
+            "dataType": "int64",
+            "expression": "INT(([MonthNo] + 2) / 3)",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "2c454753-0284-4cb2-9636-48b4a87140b1",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Quarter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Quarter"
+              }
+            ],
+            "dataCategory": "Quarters",
+            "dataType": "string",
+            "expression": "\"Qtr \" & [QuarterNo]",
+            "isHidden": true,
+            "lineageTag": "cb7969f4-d587-45c7-a2a8-6fff71c1b32b",
+            "sortByColumn": "QuarterNo",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Day",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Day"
+              }
+            ],
+            "dataCategory": "DayOfMonth",
+            "dataType": "int64",
+            "expression": "DAY([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "1a7904ca-b3a8-405d-a466-58bd89c6d7bd",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Date Hierarchy",
+            "annotations": [
+              {
+                "name": "TemplateId",
+                "value": "DateHierarchy"
+              }
+            ],
+            "levels": [
+              {
+                "name": "Year",
+                "column": "Year",
+                "lineageTag": "c29c6c38-5030-4608-a6f3-5c8d1a579638",
+                "ordinal": 0
+              },
+              {
+                "name": "Quarter",
+                "column": "Quarter",
+                "lineageTag": "001bcc30-cd8c-4804-a574-19b103c86c75",
+                "ordinal": 1
+              },
+              {
+                "name": "Month",
+                "column": "Month",
+                "lineageTag": "97ea6d0c-2ccc-4311-874b-be977013f893",
+                "ordinal": 2
+              },
+              {
+                "name": "Day",
+                "column": "Day",
+                "lineageTag": "2a2c9124-27e8-4f85-bbc1-744558e458bc",
+                "ordinal": 3
+              }
+            ],
+            "lineageTag": "9ebb642b-fbaa-45ff-b9af-67071d2b6e3c"
+          }
+        ],
+        "isHidden": true,
+        "isPrivate": true,
+        "lineageTag": "fa4a7609-339f-4bd9-a673-fbf87e51bc22",
+        "partitions": [
+          {
+            "name": "DateTableTemplate_1765f73b-6fb9-4920-afdb-fbc72ca5558e",
+            "mode": "import",
+            "source": {
+              "expression": "Calendar(Date(2015,1,1), Date(2015,1,1))",
+              "type": "calculated"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
